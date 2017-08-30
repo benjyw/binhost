@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Note: Run this from the binhost repo root.
+
+set -e
 
 ggrep -V >/dev/null 2>&1 || {
   echo >&2 "I require ggrep but it's not installed.  Please install using 'brew install grep'. Aborting.";
