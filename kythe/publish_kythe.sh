@@ -21,23 +21,30 @@
 
 set -e
 
-VERSION=$1
-if [ -z "$VERSION" ];
+REV=$1
+if [ -z "$REV" ];
 then
-  echo "Usage: $0 <kythe_version> (e.g., kythe-vXX.YY.ZZ.5-snowchainNNN-HHHHHHHHHHH)"
+  echo "Usage: $0 <kythe_version> (e.g., vXX.YY.ZZ.5-snowchainNNN-HHHHHHHHHHH)"
   exit 1
 fi
 
-echo "publishing ${VERSION} to binhost"
+echo "publishing ${REV} to binhost"
 
-KYTHE_RELEASES_DIR="${HOME}/kythe_releases"
-KYTHE_VERSION_DIR="${KYTHE_RELEASES_DIR}/${VERSION}"
+KYTHE_REV_DIR="${HOME}/kythe_releases/kythe-${REV}"
 
-OUTPUT_DIR="kythe/${VERSION}/default"
+OUTPUT_DIR="kythe/${REV}"
 mkdir -p ${OUTPUT_DIR}
 
-cp "${KYTHE_VERSION_DIR}/extractors/javac_extractor.jar" ${OUTPUT_DIR}
-cp "${KYTHE_VERSION_DIR}/indexers/java_indexer.jar" ${OUTPUT_DIR}
+function copy() {
+  local SRC="$1"
+  local ARTIFACT=$(basename "$1")
+  local OUTPUT_DIR="kythe/${ARTIFACT}/${REV}"
+  mkdir -p ${OUTPUT_DIR}
+  cp "${KYTHE_REV_DIR}/${SRC}.jar" "${OUTPUT_DIR}/${ARTIFACT}-${REV}.jar"
+}
+
+copy "extractors/javac_extractor"
+copy "indexers/java_indexer"
 
 git add --all
-git commit -m "${VERSION}"
+git commit -m "Kythe release ${REV}"
