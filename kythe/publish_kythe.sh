@@ -21,26 +21,27 @@ echo "publishing ${REV} to binhost"
 KYTHE_REV_RELEASE="${HOME}/kythe_releases/kythe-${REV}.tar.gz"
 KYTHE_REV_DIR="${HOME}/kythe_releases/kythe-${REV}"
 
-if [ `uname` == "Darwin" ];
-then
-  PREFIX="mac/10.11"
-else
-  PREFIX="linux/x86_64"
-fi
-
-REV_DIR="kythe/${PREFIX}/${REV}"
-mkdir -p ${REV_DIR}
-cp ${KYTHE_REV_RELEASE} "${REV_DIR}/kythe.tar.gz"
+BASENAME="kythe.tar.gz"
 
 if [ `uname` == "Darwin" ];
 then
-  pushd kythe/mac > /dev/null
-  for MACOS_REV in "10.12" "10.13"; do
-      ln -s "10.11" ${MACOS_REV}
+  EARLIEST_MACOS_REV="10.11"
+  OTHER_MACOS_REVS=("10.12" "10.13")
+  TARBALL_PATH="kythe/mac/${EARLIEST_MACOS_REV}/${REV}/${BASENAME}"
+  mkdir -p `dirname ${TARBALL_PATH}`
+  cp ${KYTHE_REV_RELEASE} ${TARBALL_PATH}
+  for MACOS_REV in ${OTHER_MACOS_REVS[@]}; do
+    DIR="kythe/mac/${MACOS_REV}/${REV}"
+    mkdir -p ${DIR}
+    pushd ${DIR} > /dev/null
+    ln -s "../../${EARLIEST_MACOS_REV}/${REV}/${BASENAME}" ${BASENAME}
+    popd > /dev/null
   done
-  popd > /dev/null
+else
+  TARBALL_PATH="kythe/linux/x86_64/${REV}/${BASENAME}"
+  mkdir -p `dirname ${TARBALL_PATH}`
+  cp ${KYTHE_REV_RELEASE} ${TARBALL_PATH}
 fi
-
 
 
 function copy_jar() {
@@ -51,8 +52,8 @@ function copy_jar() {
   cp "${KYTHE_REV_DIR}/${SRC}.jar" "${OUTPUT_DIR}/${ARTIFACT}-${REV}.jar"
 }
 
-copy_jar "extractors/javac_extractor"
-copy_jar "indexers/java_indexer"
+#copy_jar "extractors/javac_extractor"
+#copy_jar "indexers/java_indexer"
 
-git add --all
-git commit -m "Kythe release ${REV}"
+#git add --all
+#git commit -m "Kythe release ${REV}"
