@@ -14,9 +14,8 @@ We build and publish our own Kythe releases, for several reasons:
 Here's how to build and publish a Kythe release. 
 These instructions worked at Kythe commit [f1821c71459](https://github.com/google/kythe/commit/f1821c71459)
 
-Note that we currently only care about the Java indexer jars provided by the release. Unfortunately
-we have yet to find a way to create them without building the entire release, including the C++ 
-and Go indexers.
+Note that we publish a platform-specific release tarball, for consumption as binary utils, 
+and also the platform-neutral .jar files, for separate consumption via JVM dependency resolution.
 
 ### Build Release
 
@@ -39,20 +38,31 @@ and Go indexers.
    bazel build kythe/release
    ```
    
-   This creates a tarball at `~/src/kythe/bazel-genfiles/kythe/release/kythe-v0.0.26.tar.gz`.
+   This creates a tarball at `~/src/kythe/bazel-genfiles/kythe/release/kythe-${KYTHE_RELEASE_VERSION}.tar.gz`.
 
 1. Generate custom version string:
 
    Our custom versions have the following format:
    
    `v{latest kythe release}.5-snowchain{incremented custom release}-{first 11 of kythe commit hash}`
-   e.g. `kythe-v0.0.26.5-snowchain032-57c8dc79060`.
    
-   Expand the release tarball into an appropriately-named directory under `~/kythe_releases/`:
+   E.g. ```
+   export set KYTHE_RELEASE_VERSION="v0.0.26"
+   export set KYTHE_CUSTOM_VERSION="${KYTHE_RELEASE_VERSION}.5-snowchain032-57c8dc79060"
+   ```.
+   
+1. Rename the release tarball:
+
+  ```bash
+  mv ~/src/kythe/bazel-genfiles/kythe/release/kythe-${KYTHE_RELEASE_VERSION}.tar.gz 
+     ~/kythe_releases/kythe-${KYTHE_CUSTOM_VERSION}.tar.gz
+   ```
+   
+   Then expand the release tarball into an appropriately-named directory under `~/kythe_releases/`:
 
    ```bash
-   tar xfz bazel-genfiles/kythe/release/kythe-v0.0.26.tar.gz -C ~/kythe_releases/
-   mv ~/kythe_releases/kythe-v0.0.26 ~/kythe_releases/kythe-v0.0.26.5-snowchain032-57c8dc79060
+   tar xfz ~/kythe_releases/kythe-${KYTHE_CUSTOM_VERSION}.tar.gz -C ~/kythe_releases/
+   mv ~/kythe_releases/kythe-${KYTHE_RELEASE_VERSION} ~/kythe_releases/kythe-${KYTHE_CUSTOM_VERSION}
    ```
 
 1. Test locally:
@@ -79,10 +89,10 @@ You can publish your release with the following steps:
     ```bash
     cd ~/src/binhost
     git pull
-    ./kythe/publish_kythe.sh v0.0.26.5-snowchain032-57c8dc79060
+    ./kythe/publish_kythe.sh ${KYTHE_CUSTOM_VERSION}
     ```
     
-1.  Publish by pushing the resulting jars to master in this repo:
+1.  Publish by pushing the resulting files to master in this repo:
     ```bash
     git push origin master
     ```

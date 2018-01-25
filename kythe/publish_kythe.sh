@@ -18,12 +18,22 @@ fi
 
 echo "publishing ${REV} to binhost"
 
+KYTHE_REV_RELEASE="${HOME}/kythe_releases/kythe-${REV}.tar.gz"
 KYTHE_REV_DIR="${HOME}/kythe_releases/kythe-${REV}"
 
-OUTPUT_DIR="kythe/${REV}"
-mkdir -p ${OUTPUT_DIR}
+if [ `uname` == "Darwin" ];
+then
+  PREFIX="mac/10.11"
+else
+  PREFIX="linux/x86_64"
+fi
 
-function copy() {
+REV_DIR="${PREFIX}/${REV}"
+mkdir -p ${REV_DIR}
+cp ${KYTHE_REV_RELEASE} "${REV_DIR}/kythe.tar.gz"
+
+
+function copy_jar() {
   local SRC="$1"
   local ARTIFACT=$(basename "$1")
   local OUTPUT_DIR="kythe/${ARTIFACT}/${REV}"
@@ -31,8 +41,8 @@ function copy() {
   cp "${KYTHE_REV_DIR}/${SRC}.jar" "${OUTPUT_DIR}/${ARTIFACT}-${REV}.jar"
 }
 
-copy "extractors/javac_extractor"
-copy "indexers/java_indexer"
+copy_jar "extractors/javac_extractor"
+copy_jar "indexers/java_indexer"
 
 git add --all
 git commit -m "Kythe release ${REV}"
