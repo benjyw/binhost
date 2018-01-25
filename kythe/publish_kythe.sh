@@ -25,17 +25,13 @@ BASENAME="kythe.tar.gz"
 
 if [ `uname` == "Darwin" ];
 then
-  EARLIEST_MACOS_REV="10.11"
-  OTHER_MACOS_REVS=("10.12" "10.13")
-  TARBALL_PATH="kythe/mac/${EARLIEST_MACOS_REV}/${REV}/${BASENAME}"
-  mkdir -p `dirname ${TARBALL_PATH}`
-  cp ${KYTHE_REV_RELEASE} ${TARBALL_PATH}
-  for MACOS_REV in ${OTHER_MACOS_REVS[@]}; do
-    DIR="kythe/mac/${MACOS_REV}/${REV}"
-    mkdir -p ${DIR}
-    pushd ${DIR} > /dev/null
-    ln -s "../../${EARLIEST_MACOS_REV}/${REV}/${BASENAME}" ${BASENAME}
-    popd > /dev/null
+  # Unfortunately github raw pages doesn't handle symlinks the way we'd want it to, so we
+  # have to copy the file for each MacOS version.
+  MACOS_REVS=("10.12" "10.13")
+  for MACOS_REV in ${MACOS_REVS[@]}; do
+    TARBALL_PATH="kythe/mac/${MACOS_REV}/${REV}/${BASENAME}"
+    mkdir -p `dirname ${TARBALL_PATH}`
+    cp ${KYTHE_REV_RELEASE} ${TARBALL_PATH}
   done
 else
   TARBALL_PATH="kythe/linux/x86_64/${REV}/${BASENAME}"
@@ -52,8 +48,8 @@ function copy_jar() {
   cp "${KYTHE_REV_DIR}/${SRC}.jar" "${OUTPUT_DIR}/${ARTIFACT}-${REV}.jar"
 }
 
-#copy_jar "extractors/javac_extractor"
-#copy_jar "indexers/java_indexer"
+copy_jar "extractors/javac_extractor"
+copy_jar "indexers/java_indexer"
 
-#git add --all
-#git commit -m "Kythe release ${REV}"
+git add --all
+git commit -m "Kythe release ${REV}"
