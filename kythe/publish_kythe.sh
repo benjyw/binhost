@@ -32,6 +32,16 @@ REV_DIR="kythe/${PREFIX}/${REV}"
 mkdir -p ${REV_DIR}
 cp ${KYTHE_REV_RELEASE} "${REV_DIR}/kythe.tar.gz"
 
+if [ `uname` == "Darwin" ];
+then
+  pushd kythe/mac > /dev/null
+  for MACOS_REV in "10.12" "10.13"; do
+      ln -s "10.11" ${MACOS_REV}
+  done
+  popd > /dev/null
+fi
+
+
 
 function copy_jar() {
   local SRC="$1"
