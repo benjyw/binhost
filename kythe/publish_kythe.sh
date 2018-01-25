@@ -28,7 +28,7 @@ else
   PREFIX="linux/x86_64"
 fi
 
-REV_DIR="${PREFIX}/${REV}"
+REV_DIR="kythe/${PREFIX}/${REV}"
 mkdir -p ${REV_DIR}
 cp ${KYTHE_REV_RELEASE} "${REV_DIR}/kythe.tar.gz"
 
