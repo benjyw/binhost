@@ -50,6 +50,7 @@ function copy_jar() {
 
 copy_jar "extractors/javac_extractor"
 copy_jar "indexers/java_indexer"
+copy_jar "indexers/jvm_indexer"
 
 git add --all
 git commit -m "Kythe release ${REV}"
