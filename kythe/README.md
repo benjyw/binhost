@@ -44,11 +44,11 @@ and also the platform-neutral .jar files, for separate consumption via JVM depen
 
    Our custom versions have the following format:
    
-   `v{latest kythe release}.5-snowchain{incremented custom release}-{first 11 of kythe commit hash}`
+   `v{latest kythe release}.5-toolchain{incremented custom release}-{first 11 of kythe commit hash}`
    
    E.g. ```
-   export set KYTHE_RELEASE_VERSION="v0.0.26"
-   export set KYTHE_CUSTOM_VERSION="${KYTHE_RELEASE_VERSION}.5-snowchain032-57c8dc79060"
+   export set KYTHE_RELEASE_VERSION="v0.0.27"
+   export set KYTHE_CUSTOM_VERSION="${KYTHE_RELEASE_VERSION}.5-toolchain032-57c8dc79060"
    ```.
    
 1. Rename the release tarball:
@@ -67,12 +67,12 @@ and also the platform-neutral .jar files, for separate consumption via JVM depen
 
 1. Test locally:
 
-   If your repo is set up to consume a local release from `~/kythe_releases/`, as the Snowchain repo is 
-   (see [`ivysettings.xml`](https://github.com/benjyw/snowchain/blob/master/build-support/ivy/ivysettings.xml))
+   If your repo is set up to consume a local release from `~/kythe_releases/`, as the Toolchain repo is 
+   (see [`ivysettings.xml`](https://github.com/benjyw/toolchain/blob/master/build-support/ivy/ivysettings.xml))
    then you just need to update the relevant version strings. 
    
-   E.g., in the Snowchain repo, update the version strings in 
-   [`3rdparty/jvm/BUILD`](https://github.com/benjyw/snowchain/blob/master/3rdparty/jvm/BUILD) for the targets 
+   E.g., in the Toolchain repo, update the version strings in 
+   [`3rdparty/jvm/BUILD`](https://github.com/benjyw/toolchain/blob/master/3rdparty/jvm/BUILD) for the targets 
    `kythe-extractor` and `kythe-indexer`.
 
 ### Publish Release
@@ -99,12 +99,12 @@ You can publish your release with the following steps:
     
 1. Consume the published release
 
-   Assuming your repo is set up to consume a binhost release, as the Snowchain repo is 
-   (see [`ivysettings.xml`](https://github.com/benjyw/snowchain/blob/master/build-support/ivy/ivysettings.xml))
+   Assuming your repo is set up to consume a binhost release, as the Toolchain repo is 
+   (see [`ivysettings.xml`](https://github.com/benjyw/toolchain/blob/master/build-support/ivy/ivysettings.xml))
    then you just need to update the relevant version strings. 
    
-   E.g., in the Snowchain repo, update the version strings in 
-   [`3rdparty/jvm/BUILD`](https://github.com/benjyw/snowchain/blob/master/3rdparty/jvm/BUILD) for the targets 
+   E.g., in the Toolchain repo, update the version strings in 
+   [`3rdparty/jvm/BUILD`](https://github.com/benjyw/toolchain/blob/master/3rdparty/jvm/BUILD) for the targets 
    `kythe-extractor` and `kythe-indexer`.
 
 ### Prerequisites
