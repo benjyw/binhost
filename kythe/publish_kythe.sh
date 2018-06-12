@@ -12,7 +12,7 @@ set -e
 REV=$1
 if [ -z "$REV" ];
 then
-  echo "Usage: $0 <kythe_version> (e.g., vXX.YY.ZZ.5-snowchainNNN-HHHHHHHHHHH)"
+  echo "Usage: $0 <kythe_version> (e.g., vXX.YY.ZZ.5-toolchainNNN-HHHHHHHHHHH)"
   exit 1
 fi
 

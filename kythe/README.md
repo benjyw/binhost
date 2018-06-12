@@ -2,9 +2,8 @@
 
 We build and publish our own Kythe releases, for several reasons:
 
-- At the time of writing (September 2017), Kythe have not produced an "official" release in
-  a long time. The last one was v0.0.26, in November 2016.  We often need to stay abreast of
-  recent changes, especially those we contribute.
+- Kythe don't release very often.  We often need to stay abreast of recent changes, 
+  especially those we contribute.
    
 - Even when they do release, they don't publish those releases anywhere.
 
@@ -12,68 +11,25 @@ We build and publish our own Kythe releases, for several reasons:
 
 
 Here's how to build and publish a Kythe release. 
-These instructions worked at Kythe commit [f1821c71459](https://github.com/google/kythe/commit/f1821c71459)
 
 Note that we publish a platform-specific release tarball, for consumption as binary utils, 
 and also the platform-neutral .jar files, for separate consumption via JVM dependency resolution.
 
 ### Build Release
 
-1. Clone the Kythe repo, if you haven't before:
-   ```bash
-   cd ~/src
-   git clone https://github.com/google/kythe.git 
-   ```
-   
-   Or you may want to clone our fork, `https://github.com/benjyw/kythe.git`, if publishing custom changes.
-
-1. Build the release:
-
-   If you encounter build errors on MacOS, see the Prerequisites section below. 
-   
-   ```bash
-   cd ~/src/kythe
-   <sync to commit you want to build at>
-   tools/modules/update.sh
-   bazel build kythe/release
-   ```
-   
-   This creates a tarball at `~/src/kythe/bazel-genfiles/kythe/release/kythe-${KYTHE_RELEASE_VERSION}.tar.gz`.
-
-1. Generate custom version string:
-
-   Our custom versions have the following format:
-   
-   `v{latest kythe release}.5-toolchain{incremented custom release}-{first 11 of kythe commit hash}`
-   
-   E.g. ```
-   export set KYTHE_RELEASE_VERSION="v0.0.27"
-   export set KYTHE_CUSTOM_VERSION="${KYTHE_RELEASE_VERSION}.5-toolchain032-57c8dc79060"
-   ```.
-   
-1. Rename the release tarball:
-
-  ```bash
-  mv ~/src/kythe/bazel-genfiles/kythe/release/kythe-${KYTHE_RELEASE_VERSION}.tar.gz 
-     ~/kythe_releases/kythe-${KYTHE_CUSTOM_VERSION}.tar.gz
-   ```
-   
-   Then expand the release tarball into an appropriately-named directory under `~/kythe_releases/`:
-
-   ```bash
-   tar xfz ~/kythe_releases/kythe-${KYTHE_CUSTOM_VERSION}.tar.gz -C ~/kythe_releases/
-   mv ~/kythe_releases/kythe-${KYTHE_RELEASE_VERSION} ~/kythe_releases/kythe-${KYTHE_CUSTOM_VERSION}
-   ```
+Run [kythe/build_kythe](./build_kythe.sh) from the root of this repo. This will create a local
+release. 
 
 1. Test locally:
 
-   If your repo is set up to consume a local release from `~/kythe_releases/`, as the Toolchain repo is 
-   (see [`ivysettings.xml`](https://github.com/benjyw/toolchain/blob/master/build-support/ivy/ivysettings.xml))
-   then you just need to update the relevant version strings. 
+   Ensure your repo is set up to consume a local release from `~/kythe_releases/`, as the Toolchain repo is 
+   (see [`ivysettings.xml`](https://github.com/benjyw/toolchain/blob/master/build-support/ivy/ivysettings.xml)). 
    
-   E.g., in the Toolchain repo, update the version strings in 
-   [`3rdparty/jvm/BUILD`](https://github.com/benjyw/toolchain/blob/master/3rdparty/jvm/BUILD) for the targets 
-   `kythe-extractor` and `kythe-indexer`.
+   Then update your version strings.  E.g., in the Toolchain repo, update the relevant version strings in 
+   [`3rdparty/jvm/BUILD`](https://github.com/benjyw/toolchain/blob/master/3rdparty/jvm/BUILD) and in 
+   [`src/python/toolchain/pants/kythe_release.py`](https://github.com/benjyw/toolchain/blob/master/src/python/toolchain/pants/kythe_release.py)
+
+    Now Pants will consume the local custom kythe release.
 
 ### Publish Release
 
@@ -89,7 +45,7 @@ You can publish your release with the following steps:
     ```bash
     cd ~/src/binhost
     git pull
-    ./kythe/publish_kythe.sh ${KYTHE_CUSTOM_VERSION}
+    ./kythe/publish_kythe.sh custom_kythe_version
     ```
     
 1.  Publish by pushing the resulting files to master in this repo:
@@ -99,13 +55,10 @@ You can publish your release with the following steps:
     
 1. Consume the published release
 
-   Assuming your repo is set up to consume a binhost release, as the Toolchain repo is 
-   (see [`ivysettings.xml`](https://github.com/benjyw/toolchain/blob/master/build-support/ivy/ivysettings.xml))
-   then you just need to update the relevant version strings. 
+   Ensure your repo is set up to consume a binhost release, as the Toolchain repo is 
+   (see [`ivysettings.xml`](https://github.com/benjyw/toolchain/blob/master/build-support/ivy/ivysettings.xml)).
    
-   E.g., in the Toolchain repo, update the version strings in 
-   [`3rdparty/jvm/BUILD`](https://github.com/benjyw/toolchain/blob/master/3rdparty/jvm/BUILD) for the targets 
-   `kythe-extractor` and `kythe-indexer`.
+   Then update your version strings, as described above for local testing.
 
 ### Prerequisites
 
