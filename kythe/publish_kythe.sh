@@ -23,8 +23,11 @@ KYTHE_REV_DIR="${HOME}/kythe_releases/kythe-${REV}"
 
 BASENAME="kythe.tar.gz"
 
-if [ `uname` == "Darwin" ];
-then
+fileformat_line=`objdump -s --section .comment  ${KYTHE_REV_DIR}/indexers/cxx_indexer  | grep -o "file format .*"`
+fileformat=${fileformat_line:12}
+
+if [ "${fileformat}" == "Mach-O 64-bit x86-64" ]; then
+  PLATFORM="MacOS"
   # Unfortunately github raw pages doesn't handle symlinks the way we'd want it to, so we
   # have to copy the file for each MacOS version.
   MACOS_REVS=("10.12" "10.13")
@@ -33,10 +36,14 @@ then
     mkdir -p `dirname ${TARBALL_PATH}`
     cp ${KYTHE_REV_RELEASE} ${TARBALL_PATH}
   done
-else
+elif [ "${fileformat}" == "ELF64-x86-64" ]; then
+  PLATFORM="Linux"
   TARBALL_PATH="kythe/linux/x86_64/${REV}/${BASENAME}"
   mkdir -p `dirname ${TARBALL_PATH}`
   cp ${KYTHE_REV_RELEASE} ${TARBALL_PATH}
+else
+  echo "Unrecognized fileformat: ${fileformat}"
+  exit 2
 fi
 
 
@@ -53,4 +60,4 @@ copy_jar "indexers/java_indexer"
 copy_jar "indexers/jvm_indexer"
 
 git add --all
-git commit -m "Kythe release ${REV}"
+git commit -m "Kythe release ${REV} for ${PLATFORM}."
