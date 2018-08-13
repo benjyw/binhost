@@ -26,25 +26,32 @@ BASENAME="kythe.tar.gz"
 fileformat_line=`objdump -s --section .comment  ${KYTHE_REV_DIR}/indexers/cxx_indexer  | grep -o "file format .*"`
 fileformat=${fileformat_line:12}
 
-if [ "${fileformat}" == "Mach-O 64-bit x86-64" ]; then
-  PLATFORM="MacOS"
-  # Unfortunately github raw pages doesn't handle symlinks the way we'd want it to, so we
-  # have to copy the file for each MacOS version.
-  MACOS_REVS=("10.12" "10.13")
-  for MACOS_REV in ${MACOS_REVS[@]}; do
-    TARBALL_PATH="kythe/mac/${MACOS_REV}/${REV}/${BASENAME}"
+function copy_release_tarball() {
+  if [ "${fileformat}" == "Mach-O 64-bit x86-64" ]; then
+    PLATFORM="MacOS"
+    # Unfortunately github raw pages doesn't handle symlinks the way we'd want it to, so we
+    # have to copy the file for each MacOS version.
+    MACOS_REVS=("10.12" "10.13")
+    for MACOS_REV in ${MACOS_REVS[@]}; do
+      TARBALL_PATH="kythe/mac/${MACOS_REV}/${REV}/${BASENAME}"
+      mkdir -p `dirname ${TARBALL_PATH}`
+      cp ${KYTHE_REV_RELEASE} ${TARBALL_PATH}
+    done
+  elif [ "${fileformat}" == "ELF64-x86-64" ]; then
+    PLATFORM="Linux"
+    TARBALL_PATH="kythe/linux/x86_64/${REV}/${BASENAME}"
     mkdir -p `dirname ${TARBALL_PATH}`
     cp ${KYTHE_REV_RELEASE} ${TARBALL_PATH}
-  done
-elif [ "${fileformat}" == "ELF64-x86-64" ]; then
-  PLATFORM="Linux"
-  TARBALL_PATH="kythe/linux/x86_64/${REV}/${BASENAME}"
-  mkdir -p `dirname ${TARBALL_PATH}`
-  cp ${KYTHE_REV_RELEASE} ${TARBALL_PATH}
-else
-  echo "Unrecognized fileformat: ${fileformat}"
-  exit 2
-fi
+  else
+    echo "Unrecognized fileformat: ${fileformat}"
+    exit 2
+  fi
+}
+
+# We don't currently host the tarball because it's over 100MB, so GitHub won't have it.
+# We probably don't need to anyway, as our production code consumes the various binaries
+# it uses from the docker image, so it's not clear we even have a use for this.
+# copy_release_tarball
 
 
 function copy_jar() {
@@ -60,4 +67,4 @@ copy_jar "indexers/java_indexer"
 copy_jar "indexers/jvm_indexer"
 
 git add --all
-git commit -m "Kythe release ${REV} for ${PLATFORM}."
+git commit -m "Kythe release ${REV}"
