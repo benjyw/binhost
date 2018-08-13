@@ -72,7 +72,8 @@ echo "New custom Kythe release: ${custom_kythe_release}"
 # so that client code doesn't have to deal with a changing subdir.
 echo "Creating Kythe release tarball"
 rm -f ${custom_kythe_release_tarball}
-tar cfz ${custom_kythe_release_tarball} -C ${KYTHE_RELEASES} kythe-release
+GZIP=-9 tar cfz ${custom_kythe_release_tarball} -C ${KYTHE_RELEASES} kythe-release
+chmod 755 ${custom_kythe_release_tarball}
 
 # Now rename to a version-specific local loose dir.
 rm -rf ${custom_kythe_release_dir}

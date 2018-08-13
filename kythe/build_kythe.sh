@@ -56,7 +56,8 @@ tar xfz ${custom_kythe_release_tarball} -C ${KYTHE_RELEASES}
 # Re-tar with the unversioned name `kythe-release`, so that client code doesn't have to deal with a changing subdir.
 mv "${KYTHE_RELEASES}/kythe-${latest_kythe_release}" "${KYTHE_RELEASES}/kythe-release"
 rm -rf ${custom_kythe_release_tarball}
-tar cfz ${custom_kythe_release_tarball} -C ${KYTHE_RELEASES} kythe-release
+GZIP=-9 tar cfz ${custom_kythe_release_tarball} -C ${KYTHE_RELEASES} kythe-release
+chmod 755 ${custom_kythe_release_tarball}
 # Then move to custom-versioned loose local dir.
 mv "${KYTHE_RELEASES}/kythe-release" ${custom_kythe_release_dir}
 
