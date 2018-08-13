@@ -15,12 +15,24 @@ Here's how to build and publish a Kythe release.
 Note that we publish a platform-specific release tarball, for consumption as binary utils, 
 and also the platform-neutral .jar files, for separate consumption via JVM dependency resolution.
 
-### Build Release
 
-Run [kythe/build_kythe](./build_kythe.sh) from the root of this repo. This will create a local
-release. 
+### Get Release From Docker Image
 
-1. Test locally:
+Our production build script generates a Dockerfile that builds a Kythe release, ensuring a stable, consistent environment.
+It's often convenient to publish the artifacts from that release.
+
+(Note: Production code can either consume the platform-specific Kythe binaries, published here, as binary utils, or 
+consume them from the Docker image. We should probably standardize on just one of those methods.)
+
+Run [get_kythe_from_docker_image.sh](./get_kythe_from_docker_image.sh) from the root of this repo. 
+This will place a local release in `~/kythe_releases/`.
+
+### Build Release Locally
+
+Run [build_kythe.sh](./build_kythe.sh) from the root of this repo. 
+This will build a local release and copy into `~/kythe_releases/`.
+
+### Test Locally
 
    Ensure your repo is set up to consume a local release from `~/kythe_releases/`, as the Toolchain repo is 
    (see [`ivysettings.xml`](https://github.com/benjyw/toolchain/blob/master/build-support/ivy/ivysettings.xml)). 
