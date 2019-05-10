@@ -16,11 +16,11 @@ set -e
 KYTHE_DOCKER_IMAGE_TAG=$1
 if [ -z "$KYTHE_DOCKER_IMAGE_TAG" ];
 then
-  echo "Usage: $0 <kythe_docker_image_tag> (e.g., toolchain.kythe-2018-08-13.12-03-00-d4c299c6f452)"
+  echo "Usage: $0 <kythe_docker_image_tag> (e.g., b3a726a6b03b-000)"
   exit 1
 fi
 
-ECR_REPO=283194185447.dkr.ecr.us-east-1.amazonaws.com/toolchain
+ECR_REPO=283194185447.dkr.ecr.us-east-1.amazonaws.com/kythe
 KYTHE_RELEASES="${HOME}/kythe_releases"
 
 echo "Logging in to ECR repo"

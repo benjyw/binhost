@@ -21,10 +21,10 @@ and also the platform-neutral .jar files, for separate consumption via JVM depen
 Our production build script generates a Dockerfile that builds a Kythe release, ensuring a stable, consistent environment.
 It's often convenient to publish the artifacts from that release.
 
-(Note: Production code can either consume the platform-specific Kythe binaries, published here, as binary utils, or 
+(Note: Production code can either consume the platform-specific Kythe binaries, published here, as binary utils, or
 consume them from the Docker image. We should probably standardize on just one of those methods.)
 
-Run [get_kythe_from_docker_image.sh](./get_kythe_from_docker_image.sh) from the root of this repo. 
+Run [get_kythe_from_docker_image.sh](./get_kythe_from_docker_image.sh) from the root of this repo.
 This will place a local release in `~/kythe_releases/`.
 
 ### Build Release Locally
@@ -34,14 +34,14 @@ This will build a local release and copy into `~/kythe_releases/`.
 
 ### Test Locally
 
-   Ensure your repo is set up to consume a local release from `~/kythe_releases/`, as the Toolchain repo is 
-   (see [`ivysettings.xml`](https://github.com/benjyw/toolchain/blob/master/build-support/ivy/ivysettings.xml)). 
-   
-   Then update your version strings.  E.g., in the Toolchain repo, update the relevant version strings in 
-   [`3rdparty/jvm/BUILD`](https://github.com/benjyw/toolchain/blob/master/3rdparty/jvm/BUILD) and in 
-   [`src/python/toolchain/pants/kythe_release.py`](https://github.com/benjyw/toolchain/blob/master/src/python/toolchain/pants/kythe_release.py)
+Ensure your repo is set up to consume a local release from `~/kythe_releases/`, as the Toolchain repo is
+(see [`ivysettings.xml`](https://github.com/benjyw/toolchain/blob/master/build-support/ivy/ivysettings.xml)).
 
-    Now Pants will consume the local custom kythe release.
+Then update your version strings.  E.g., in the Toolchain repo, update the relevant version strings in
+[`3rdparty/jvm/BUILD`](https://github.com/benjyw/toolchain/blob/master/3rdparty/jvm/BUILD) and in
+[`src/python/toolchain/pants/kythe_release.py`](https://github.com/benjyw/toolchain/blob/master/src/python/toolchain/pants/kythe_release.py)
+
+Now Pants will consume the local custom kythe release.
 
 ### Publish Release
 
