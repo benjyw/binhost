@@ -60,6 +60,7 @@ function copy_jar() {
   local OUTPUT_DIR="kythe/${ARTIFACT}/${REV}"
   mkdir -p ${OUTPUT_DIR}
   cp "${KYTHE_REV_DIR}/${SRC}.jar" "${OUTPUT_DIR}/${ARTIFACT}-${REV}.jar"
+  echo "<project/>" > "${OUTPUT_DIR}/${ARTIFACT}-${REV}.pom"
 }
 
 copy_jar "extractors/javac_extractor"
