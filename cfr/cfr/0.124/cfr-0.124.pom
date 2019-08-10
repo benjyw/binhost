@@ -1,1 +1,5 @@
-<project/>
+<project>
+  <groupId>cfr</groupId>
+  <artifactId>cfr</artifactId>
+  <version>0.124</version>
+</project>

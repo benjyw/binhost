@@ -1,1 +1,5 @@
-<project/>
+<project>
+  <groupId>kythe</groupId>
+  <artifactId>jvm_indexer</artifactId>
+  <version>v0.0.30-toolchain001-26a6b03b-000</version>
+</project>

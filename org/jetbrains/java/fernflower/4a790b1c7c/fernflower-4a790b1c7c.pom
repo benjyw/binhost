@@ -1,1 +1,5 @@
-<project/>
+<project>
+  <groupId>org.jetbrains.java</groupId>
+  <artifactId>fernflower</artifactId>
+  <version>4a790b1c7c</version>
+</project>
